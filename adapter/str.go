@@ -1,6 +1,10 @@
 package adapter
 
-import "github.com/gone-io/gone"
+import (
+	"fmt"
+	"github.com/gomodule/redigo/redis"
+	"github.com/gone-io/gone"
+)
 
 func NewStr() (gone.Angel, gone.GonerId) {
 	return &str{}, IdRedisStr
@@ -29,65 +33,156 @@ func (s *str) Append(key string, value any) error {
 }
 
 func (s *str) Decr(key string) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("DECR", key)
+
+	return err
 }
 
 func (s *str) DecrBy(key string, decr int64) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("DECRBY", key, decr)
+
+	return err
 }
 
 func (s *str) Get(key string) (string, error) {
-	return "", nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	return redis.String(conn.Do("GET", key))
 }
 
 func (s *str) GetRange(key string, start, end int64) (string, error) {
-	return "", nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	return redis.String(conn.Do("GETRANGE", key, start, end))
 }
 
 func (s *str) GetSet(key string, value any) (string, error) {
-	return "", nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	return redis.String(conn.Do("GETSET", key, value))
 }
 
 func (s *str) Incr(key string) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("INCR", key)
+
+	return err
 }
 
 func (s *str) IncrBy(key string, incr int64) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("INCRBY", key, incr)
+
+	return err
 }
 
 func (s *str) IncrByFloat(key string, incrF float64) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("INCRBYFLOAT", key, incrF)
+
+	return err
 }
 
 func (s *str) MGet(keys ...string) ([]string, error) {
-	return nil, nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	args := arrToArgs(keys)
+	return redis.Strings(conn.Do("MGET", args...))
 }
 
 func (s *str) MSet(kvs map[string]any) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	args := mapToArgs(kvs)
+	_, err := conn.Do("MSET", args...)
+
+	return err
 }
 
-func (s *str) MSetNX(kvs map[string]any) error {
-	return nil
+func (s *str) MSetNX(kvs map[string]any) (ok bool, err error) {
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	args := mapToArgs(kvs)
+	ok, err = redis.Bool(conn.Do("MSETNX", args...))
+
+	return
 }
 
 func (s *str) Set(key string, value any) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("SET", key, value)
+
+	return err
 }
 
 func (s *str) SetEX(key string, seconds int64, value any) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("SETEX", key, seconds, value)
+
+	return err
 }
 
-func (s *str) SetNX(key string, value any) error {
-	return nil
+func (s *str) SetNX(key string, value any) (ok bool, err error) {
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	ok, err = redis.Bool(conn.Do("SETNX", key, value))
+
+	return
 }
 
 func (s *str) SetRange(key string, offset int64, value any) error {
-	return nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	_, err := conn.Do("SETRANGE", key, offset, value)
+
+	return err
 }
 
 func (s *str) StrLen(key string) (int64, error) {
-	return 0, nil
+	conn := s.redisPool.getConn()
+	defer s.redisPool.CloseConn(conn)
+
+	return redis.Int64(conn.Do("STRLEN", key))
+}
+
+func mapToArgs(kvs map[string]any) redis.Args {
+	args := redis.Args{}
+	for k, v := range kvs {
+		args = args.Add(k).Add(fmt.Sprintf("%v", v))
+	}
+
+	return args
+}
+
+func arrToArgs(ks []string) redis.Args {
+	args := redis.Args{}
+	for _, k := range ks {
+		args = args.Add(k)
+	}
+
+	return args
 }

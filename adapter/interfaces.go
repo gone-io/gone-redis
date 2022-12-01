@@ -42,6 +42,7 @@ type IStr interface {
 
 	//IncrByFloat Increment the string representing a floating point number stored at key by the specified increment.
 	//By using a negative increment value, the result is that the value stored at the key is decremented.
+	//[notice] Calculating floating point numbers is often inaccurate.
 	IncrByFloat(key string, incrF float64) error
 
 	//MGet returns the values of all specified keys. If key not exist, return nil.
@@ -51,7 +52,7 @@ type IStr interface {
 	MSet(kvs map[string]any) error
 
 	//MSetNX Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.
-	MSetNX(kvs map[string]any) error
+	MSetNX(kvs map[string]any) (bool, error)
 
 	//Set give the string value to the key， NX | XX and other operations is not supported. Use redigo if you want.
 	Set(key string, value any) error
@@ -60,7 +61,7 @@ type IStr interface {
 	SetEX(key string, seconds int64, value any) error
 
 	//SetNX Set key to hold string value if key does not exist. In that case, it is equal to SET.  "SET if Not eXists".
-	SetNX(key string, value any) error
+	SetNX(key string, value any) (bool, error)
 
 	//SetRange Overwrites part of the string stored at key, starting at the specified offset, for the entire length of value. if offset out of range, append value to the key.
 	SetRange(key string, offset int64, value any) error

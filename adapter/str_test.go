@@ -10,13 +10,13 @@ import (
 	"time"
 )
 
-type RedisTester struct {
+type strTester struct {
 	gone.Flag
 	s IStr `gone:"gone-redis-str,test-str"`
 }
 
-func TestHash(t *testing.T) {
-	gone.Test(func(u *RedisTester) {
+func TestStr(t *testing.T) {
+	gone.Test(func(u *strTester) {
 		s := u.s
 
 		t.Run("t-append", func(t *testing.T) {
@@ -57,7 +57,7 @@ func TestHash(t *testing.T) {
 			assert.EqualValues(t, 5, actualVal)
 		})
 
-		t.Run("t-GetRange & Set", func(t *testing.T) {
+		t.Run("t-GetRange & ISet", func(t *testing.T) {
 			key := "aStr"
 			err := s.Set(key, "Hello World.")
 			assert.Nil(t, err)
@@ -78,7 +78,7 @@ func TestHash(t *testing.T) {
 			assert.EqualValues(t, "", val)
 		})
 
-		t.Run("t-GetRange & Set", func(t *testing.T) {
+		t.Run("t-GetRange & ISet", func(t *testing.T) {
 			key := "aStr"
 			_ = s.Set(key, "Hello world.")
 
@@ -171,7 +171,7 @@ func TestHash(t *testing.T) {
 		})
 
 	}, func(cemetery gone.Cemetery) error {
-		cemetery.Bury(&RedisTester{})
+		cemetery.Bury(&strTester{})
 		return nil
 	}, Priest)
 }

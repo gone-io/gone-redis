@@ -18,5 +18,9 @@ func Priest(cemetery gone.Cemetery) error {
 		cemetery.Bury(NewStr())
 	}
 
+	if nil == cemetery.GetTomById(IdRedisList) {
+		cemetery.Bury(NewList())
+	}
+
 	return nil
 }

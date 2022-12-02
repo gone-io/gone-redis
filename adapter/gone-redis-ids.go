@@ -5,5 +5,6 @@ const (
 	IdGoneRedisCache  = "gone-redis-cache"
 	IdGoneRedisLocker = "gone-redis-locker"
 
-	IdRedisStr = "gone-redis-str"
+	IdRedisStr  = "gone-redis-str"
+	IdRedisList = "gone-redis-list"
 )

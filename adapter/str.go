@@ -1,7 +1,6 @@
 package adapter
 
 import (
-	"fmt"
 	"github.com/gomodule/redigo/redis"
 	"github.com/gone-io/gone"
 )
@@ -167,22 +166,4 @@ func (s *str) StrLen(key string) (int64, error) {
 	defer s.redisPool.CloseConn(conn)
 
 	return redis.Int64(conn.Do("STRLEN", key))
-}
-
-func mapToArgs(kvs map[string]any) redis.Args {
-	args := redis.Args{}
-	for k, v := range kvs {
-		args = args.Add(k).Add(fmt.Sprintf("%v", v))
-	}
-
-	return args
-}
-
-func arrToArgs(ks []string) redis.Args {
-	args := redis.Args{}
-	for _, k := range ks {
-		args = args.Add(k)
-	}
-
-	return args
 }

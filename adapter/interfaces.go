@@ -54,13 +54,13 @@ type IStr interface {
 	//MSetNX Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.
 	MSetNX(kvs map[string]any) (bool, error)
 
-	//Set give the string value to the key， NX | XX and other operations is not supported. Use redigo if you want.
+	//ISet give the string value to the key， NX | XX and other operations is not supported. Use redigo if you want.
 	Set(key string, value any) error
 
-	//SetEX Set key to hold the string value and set key to timeout after a given number of seconds.
+	//SetEX ISet key to hold the string value and set key to timeout after a given number of seconds.
 	SetEX(key string, seconds int64, value any) error
 
-	//SetNX Set key to hold string value if key does not exist. In that case, it is equal to SET.  "SET if Not eXists".
+	//SetNX ISet key to hold string value if key does not exist. In that case, it is equal to SET.  "SET if Not eXists".
 	SetNX(key string, value any) (bool, error)
 
 	//SetRange Overwrites part of the string stored at key, starting at the specified offset, for the entire length of value. if offset out of range, append value to the key.
@@ -70,16 +70,7 @@ type IStr interface {
 	StrLen(key string) (int64, error)
 }
 
-type Hash interface {
-	Set(field string, v interface{}) (err error)
-	Get(field string, v interface{}) error
-
-	Del(field string) error
-	Scan(func(field string, v []byte)) error
-
-	Incr(field string, increment int64) (int64, error)
-
-	HGet(field string) (string, error)
+type IHash interface {
 
 	//HGetAll both of the field and value will be return, index 0 is field1, index 1 is value1, etc.
 	HGetAll() ([]string, error)
@@ -114,23 +105,28 @@ type Hash interface {
 	HExists(field string) (bool, error)
 }
 
-type List interface {
+type IList interface {
 
 	//BLPop unit of timeout is second，From first element.
-	BLPop(timeout int64, keys ...string) (string, error)
+	//[NOTICE] The first element of the result is the list key witch popped ele, second is the value.
+	BLPop(timeout int64, keys ...any) ([]string, error)
 
 	//BRPop unit of timeout is second，From last element.
-	BRPop(timeout int64, keys ...string) (string, error)
+	//[NOTICE] The first element of the result is the list key witch popped ele, second is the value.
+	BRPop(timeout int64, keys ...any) ([]string, error)
 
-	//LIndex if pivot not exists, err will be returned.
-	LIndex(key string, pos ListPos, pivot, element any) (string, error)
+	//LIndex return the element at the index
+	LIndex(key string, idx int64) (string, error)
+
+	//LInsert if pivot not exists, err will be returned.
+	LInsert(key string, pos ListPos, pivot, element any) error
 
 	LLen(key string) (int64, error)
 
-	//LPop remove first elements.
+	//LPop remove first elements. if elements in list is not enough, no error will be returned.
 	LPop(key string, count int64) ([]string, error)
 
-	//RPop remove last elements.
+	//RPop remove last elements. if elements in list is not enough, no error will be returned.
 	RPop(key string, count int64) ([]string, error)
 
 	//LPush push elements to head of the list.
@@ -157,7 +153,7 @@ type List interface {
 	LTrim(key string, start, stop int64) error
 }
 
-type Set interface {
+type ISet interface {
 	SAdd(key string, value ...any) error
 
 	//SCard returns num of members at the set.
@@ -201,7 +197,7 @@ type Set interface {
 	SUnionStore(desKey string, keys ...string) error
 }
 
-type ZSet interface {
+type IZSet interface {
 
 	//ZAdd some params like XX | NX, GT | LT, CH, INCR not support in this api, and score only support Integer, use redigo if you need them.
 	ZAdd(key string, score int64, member any) error

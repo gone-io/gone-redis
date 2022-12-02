@@ -73,36 +73,39 @@ type IStr interface {
 type IHash interface {
 
 	//HGetAll both of the field and value will be return, index 0 is field1, index 1 is value1, etc.
-	HGetAll() ([]string, error)
+	HGetAll(key string) ([]string, error)
 
 	//HMGet returns a list of the fields got.
-	HMGet(fields ...string) ([]string, error)
+	HMGet(key string, fields ...any) ([]string, error)
 
-	HSet(filed string, value any) error
+	//HGet returns a list of the fields got.
+	HGet(key string, field any) (string, error)
 
-	//HSetNX it's ok when the filed not exist.
-	HSetNX(filed string, value any) (bool, error)
+	HSet(key string, field string, value any) error
+
+	//HSetNX it's ok when the field not exist.
+	HSetNX(key string, field string, value any) (bool, error)
 
 	//HMSet the given map means <field, value>.
-	HMSet(kvs map[string]any) error
+	HMSet(key string, kvs map[string]any) error
 
 	//HIncrBy increase the field value, if the key or field not exist, it will increase from zero and set the field-value of the key.
-	HIncrBy(filed string, incr int64) error
+	HIncrBy(key string, field string, incr int64) error
 
 	//HKeys returns all fields contained.
-	HKeys() ([]string, error)
+	HKeys(key string) ([]string, error)
 
 	//HValues returns all values contained.
-	HValues() ([]string, error)
+	HVals(key string) ([]string, error)
 
 	//HLen returns the num of fields.
-	HLen() (int64, error)
+	HLen(key string) (int64, error)
 
 	//HDel remove a field.
-	HDel(field string) error
+	HDel(key string, field string) error
 
 	//HExists determine if the field exist.
-	HExists(field string) (bool, error)
+	HExists(key string, field string) (bool, error)
 }
 
 type IList interface {

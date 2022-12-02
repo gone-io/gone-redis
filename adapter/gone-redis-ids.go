@@ -7,4 +7,5 @@ const (
 
 	IdRedisStr  = "gone-redis-str"
 	IdRedisList = "gone-redis-list"
+	IdRedisHash = "gone-redis-hash"
 )

@@ -10,8 +10,8 @@ const (
 type ZSetOrderStrategy string
 
 const (
-	BySocore ZSetOrderStrategy = "BYSCORE"
-	ByLex    ZSetOrderStrategy = "BYLEX"
+	ByScore ZSetOrderStrategy = "BYSCORE"
+	ByLex   ZSetOrderStrategy = "BYLEX"
 )
 
 type IStr interface {

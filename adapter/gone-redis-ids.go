@@ -9,4 +9,5 @@ const (
 	IdRedisList = "gone-redis-list"
 	IdRedisHash = "gone-redis-hash"
 	IdRedisSet  = "gone-redis-set"
+	IdRedisGeo  = "gone-redis-geo"
 )

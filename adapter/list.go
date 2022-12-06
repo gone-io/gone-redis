@@ -32,7 +32,7 @@ func (l *list) BLPop(timeout int64, keys ...any) ([]string, error) {
 	m = append(m, keys...)
 	m = append(m, timeout)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	return redis.Strings(conn.Do("BLPOP", args...))
 }
@@ -45,7 +45,7 @@ func (l *list) BRPop(timeout int64, keys ...any) ([]string, error) {
 	m = append(m, keys...)
 	m = append(m, timeout)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	return redis.Strings(conn.Do("BRPOP", args...))
 }
@@ -95,7 +95,7 @@ func (l *list) LPush(key string, elements ...any) error {
 	m = append(m, key)
 	m = append(m, elements...)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	_, err := conn.Do("LPUSH", args...)
 
@@ -110,7 +110,7 @@ func (l *list) RPush(key string, elements ...any) error {
 	m = append(m, key)
 	m = append(m, elements...)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	_, err := conn.Do("RPUSH", args...)
 
@@ -125,7 +125,7 @@ func (l *list) LPushX(key string, elements ...any) error {
 	m = append(m, key)
 	m = append(m, elements...)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	_, err := conn.Do("LPUSHX", args...)
 
@@ -140,7 +140,7 @@ func (l *list) RPushX(key string, elements ...any) error {
 	m = append(m, key)
 	m = append(m, elements...)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	_, err := conn.Do("RPUSHX", args...)
 

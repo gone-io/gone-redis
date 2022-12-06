@@ -14,7 +14,16 @@ func mapToArgs(kvs map[string]any) redis.Args {
 	return args
 }
 
-func arrToArgs(ks ...any) redis.Args {
+func toArgs(ks ...any) redis.Args {
+	args := redis.Args{}
+	for _, k := range ks {
+		args = args.Add(k)
+	}
+
+	return args
+}
+
+func arrToArgs(ks []string) redis.Args {
 	args := redis.Args{}
 	for _, k := range ks {
 		args = args.Add(k)

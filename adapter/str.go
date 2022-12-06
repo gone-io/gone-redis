@@ -101,7 +101,7 @@ func (s *str) MGet(keys ...string) ([]string, error) {
 	conn := s.redisPool.getConn()
 	defer s.redisPool.CloseConn(conn)
 
-	args := arrToArgs(keys)
+	args := toArgs(keys)
 	return redis.Strings(conn.Do("MGET", args...))
 }
 

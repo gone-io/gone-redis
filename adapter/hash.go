@@ -46,7 +46,7 @@ func (h hash) HMGet(key string, fields ...any) ([]string, error) {
 	m = append(m, key)
 	m = append(m, fields...)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	return redis.Strings(conn.Do("HMGET", args...))
 }
@@ -75,7 +75,7 @@ func (h hash) HMSet(key string, kvs map[string]any) error {
 	m = append(m, key)
 	m = append(m, mapToArgs(kvs)...)
 
-	args := arrToArgs(m...)
+	args := toArgs(m...)
 
 	_, err := conn.Do("HMSET", args...)
 

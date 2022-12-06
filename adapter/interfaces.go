@@ -254,3 +254,17 @@ type IZSet interface {
 	//ZScore returns the score of member in the sorted set at key
 	ZScore(key string, member any) (float64, error)
 }
+
+type IGeo interface {
+
+	//in a way that makes it possible to query the items with the GEOSEARCH command.
+	GEOAdd(key, longitude, latitude string, member any) error
+
+	//GEODist Return the distance between two members in the geospatial index represented by the sorted set.
+	// default unit is "M", unit => [M | KM | FT | MI]
+	GEODist(key string, mem1, mem2 any, unit string) (float64, error)
+
+	//GEORadius Return the members of a sorted set populated with geospatial information using GEOADD,
+	//which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+	GEORadius(key, longitude, latitude string, radius float64, unit string) ([]GEOPos, error)
+}

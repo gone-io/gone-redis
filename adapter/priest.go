@@ -33,5 +33,10 @@ func Priest(cemetery gone.Cemetery) error {
 	if nil == cemetery.GetTomById(IdRedisGeo) {
 		cemetery.Bury(NewGeo())
 	}
+
+	if nil == cemetery.GetTomById(IdRedisZSet) {
+		cemetery.Bury(NewZSet())
+	}
+
 	return nil
 }

@@ -245,11 +245,11 @@ type IZSet interface {
 
 	//ZRevRangeByScoreWithLimit returns all the elements in the sorted set at key with a score between max and min
 	//(including elements with score equal to max or min), and use offset and count paging. Used [ZREVRANGEBYSCORE] command
-	ZRevRangeByScoreWithLimit(key string, max, min int64, withScores bool, offset, count int64)
+	ZRevRangeByScoreWithLimit(key string, max, min int64, withScores bool, offset, count int64) ([]string, error)
 
 	//ZRevRangeByScoreWithoutLimit returns all the elements in the sorted set at key with a score between max and min
 	//(including elements with score equal to max or min). Used [ZREVRANGEBYSCORE] command
-	ZRevRangeByScoreWithoutLimit(key string, max, min int64, withScores bool)
+	ZRevRangeByScoreWithoutLimit(key string, max, min int64, withScores bool) ([]string, error)
 
 	//ZScore returns the score of member in the sorted set at key
 	ZScore(key string, member any) (float64, error)

@@ -38,5 +38,9 @@ func Priest(cemetery gone.Cemetery) error {
 		cemetery.Bury(NewZSet())
 	}
 
+	if nil == cemetery.GetTomById(IdRedisKey) {
+		cemetery.Bury(NewKeyOp())
+	}
+
 	return nil
 }

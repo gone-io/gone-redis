@@ -14,6 +14,35 @@ const (
 	ByLex   ZSetOrderStrategy = "BYLEX"
 )
 
+type IKey interface {
+
+	//Keys Returns all keys matching pattern.
+	Keys(pattern string) ([]string, error)
+
+	//Expire Set a timeout on key.
+	Expire(key string, sec int64) error
+
+	//ExpireAt has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live),
+	//it takes an absolute Unix timestamp (seconds since January 1, 1970). A timestamp in the past will delete the key immediately.
+	ExpireAt(key string, timestamp int64) error
+
+	//PExpire This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.
+	PExpire(key string, mill int64) error
+
+	//PExpireAt has the same effect and semantic as EXPIREAT, but the Unix time at which the key will expire is specified in milliseconds instead of seconds.
+	PExpireAt(key string, millTimestamp int64) error
+
+	//Ttl Returns the remaining time to live of a key that has a timeout. This introspection
+	Ttl(key string) (int64, error)
+
+	//PTtl Like TTL this command returns the remaining time to live of a key that has an expire set, with the sole difference
+	//that TTL returns the amount of remaining time in seconds while PTTL returns it in milliseconds.
+	PTtl(key string) (int64, error)
+
+	//Del remove keys
+	Del(keys ...string) error
+}
+
 type IStr interface {
 
 	//Append add value (as string) to the key, if key not exist, create it.
@@ -257,7 +286,7 @@ type IZSet interface {
 
 type IGeo interface {
 
-	//in a way that makes it possible to query the items with the GEOSEARCH command.
+	//GEOAdd in a way that makes it possible to query the items with the GEOSEARCH command.
 	GEOAdd(key, longitude, latitude string, member any) error
 
 	//GEODist Return the distance between two members in the geospatial index represented by the sorted set.

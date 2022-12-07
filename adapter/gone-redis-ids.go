@@ -11,4 +11,5 @@ const (
 	IdRedisSet  = "gone-redis-set"
 	IdRedisGeo  = "gone-redis-geo"
 	IdRedisZSet = "gone-redis-zset"
+	IdRedisKey  = "gone-redis-key"
 )

@@ -15,10 +15,12 @@ type str struct {
 }
 
 func (s *str) Start(gone.Cemetery) error {
+	// do nothing
 	return nil
 }
 
 func (s *str) Stop(gone.Cemetery) error {
+	// do nothing
 	return nil
 }
 

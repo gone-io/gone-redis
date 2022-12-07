@@ -59,6 +59,65 @@ func TestNewSet(t *testing.T) {
 			assert.EqualValues(t, 2, num)
 		})
 
+		t.Run("t-Sismember & smembers & smove & spop & srandmember & srem & sunion & sunionstore", func(t *testing.T) {
+			setKey6 := "set-six"
+			setKey7 := "set-seven"
+			setKey8 := "set-eight"
+
+			err := s.SAdd(setKey6, 1, "two", "3", 4, 5)
+			assert.Nil(t, err)
+
+			err = s.SAdd(setKey7, "one", "two", 3, "four", 5)
+			assert.Nil(t, err)
+
+			isMember, err := s.SIsMember(setKey6, "two")
+			assert.Nil(t, err)
+			assert.EqualValues(t, isMember, true)
+
+			isMember, err = s.SIsMember(setKey6, "2")
+			assert.Nil(t, err)
+			assert.EqualValues(t, isMember, false)
+
+			members, err := s.SMembers(setKey6)
+			assert.Nil(t, err)
+			assert.EqualValues(t, 5, len(members))
+			fmt.Printf("%v \n", members)
+
+			err = s.SMove(setKey6, setKey7, "1")
+			assert.Nil(t, err)
+
+			len6, err := s.SCard(setKey6)
+			assert.Nil(t, err)
+			assert.EqualValues(t, 4, len6)
+			len7, err := s.SCard(setKey7)
+			assert.Nil(t, err)
+			assert.EqualValues(t, 6, len7)
+
+			pop, err := s.SPop(setKey7, 1)
+			assert.Nil(t, err)
+			len7, err = s.SCard(setKey7)
+			assert.EqualValues(t, 5, len7)
+			fmt.Printf("%v \n", pop)
+
+			members, err = s.SRandMember(setKey7, 3)
+			assert.Nil(t, err)
+			assert.EqualValues(t, 3, len(members))
+			fmt.Printf("%v \n", members)
+			len7, err = s.SCard(setKey7)
+			assert.EqualValues(t, 5, len7)
+
+			err = s.SRem(setKey7, "two", "3")
+			assert.Nil(t, err)
+			len7, err = s.SCard(setKey7)
+			assert.EqualValues(t, 3, len7)
+
+			_, err = s.SUnion(setKey6, setKey7)
+			assert.Nil(t, err)
+
+			err = s.SUnionStore(setKey8, setKey6, setKey7)
+			assert.Nil(t, err)
+		})
+
 	}, func(cemetery gone.Cemetery) error {
 		cemetery.Bury(&setTester{})
 		return nil

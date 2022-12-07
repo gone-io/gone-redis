@@ -141,7 +141,7 @@ func (s set) SUnionStore(desKey string, keys ...string) error {
 	defer s.redisPool.CloseConn(conn)
 
 	args := redis.Args{}.Add(desKey).Add(arrToArgs(keys))
-	_, err := conn.Do("SUNIONSTORE", args)
+	_, err := conn.Do("SUNIONSTORE", args...)
 
 	return err
 }
